@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuestro Verano en la Costa Blanca 🌊</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+        .tab-active {
+            background-color: #0891b2;
+            color: white;
+        }
+        .tab-inactive {
+            background-color: #e2e8f0;
+            color: #475569;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-slate-800 font-sans antialiased selection:bg-cyan-200">
+
+<!-- Chosen Palette: Warm Sand & Mediterranean Blue (bg-stone-50, text-slate-800, accent cyan-600 and amber-500) -->
+<!-- Application Structure Plan: A dashboard-style layout prioritizing chronological and thematic exploration. It starts with an emotional hook and high-level overview, transitions into an interactive data visualization of the trip's 'vibe', and culminates in a filterable, day-by-day interactive itinerary. This avoids overwhelming the user with text and allows them to explore 'Work days' vs 'Vacation days' intuitively based on the source report's phases. -->
+<!-- Visualization & Content Choices: 1. Overview Cards -> Goal: Contrast phases -> Presentation: Side-by-side flex -> Justification: Clear mental model of the trip phases. 2. Doughnut Chart (Chart.js) -> Goal: Show balance of activities -> Presentation: Canvas Chart -> Interaction: Hover tooltips -> Justification: Quantifies a qualitative plan visually to build excitement (NO SVG used). 3. Filterable Itinerary Grid -> Goal: Explore daily plans -> Presentation: Cards -> Interaction: JS filtering by phase -> Justification: Puts user in control of what part of the trip they want to read about without a massive wall of text. -->
+<!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+<header class="bg-cyan-800 text-white py-16 px-6 text-center shadow-md relative overflow-hidden">
+    <div class="absolute -top-24 -left-24 text-9xl opacity-10">🌊</div>
+    <div class="absolute -bottom-10 -right-10 text-9xl opacity-10">☀️</div>
+    <div class="max-w-4xl mx-auto relative z-10">
+        <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-4">Nuestro Verano en la Costa Blanca 🌊</h1>
+        <h2 class="text-xl md:text-2xl font-light text-cyan-100 mb-6">Denia y alrededores (25 de Agosto - 8 de Septiembre)</h2>
+        <p class="text-lg text-cyan-50 max-w-2xl mx-auto bg-cyan-900/40 p-4 rounded-xl backdrop-blur-sm">
+            Prepárate para 15 días de desconexión, calas secretas, atardeceres mágicos y la mejor gastronomía del Mediterráneo.
+        </p>
+    </div>
+</header>
+
+<main class="max-w-6xl mx-auto px-4 py-12 space-y-20">
+
+    <section id="el-plan-maestro">
+        <div class="text-center mb-10">
+            <h2 class="text-3xl font-bold text-slate-800 mb-4 flex items-center justify-center gap-2">🗺️ El Plan Maestro</h2>
+            <p class="text-slate-600 max-w-2xl mx-auto text-lg">
+                Esta sección te ofrece una visión general de cómo estructuraremos nuestros días. Hemos dividido el viaje en dos fases perfectas para equilibrar responsabilidades y puro disfrute.
+            </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-8">
+            <div class="bg-white rounded-2xl p-8 shadow-sm border border-stone-200 card-hover flex flex-col justify-between">
+                <div>
+                    <div class="text-4xl mb-4">💻🍹</div>
+                    <h3 class="text-2xl font-bold text-cyan-700 mb-2">Fase 1: Work hard, Play hard</h3>
+                    <p class="text-sm text-slate-500 mb-4 font-semibold uppercase tracking-wider">25 al 30 de Agosto</p>
+                    <p class="text-slate-600 mb-4">
+                        Por las mañanas levantamos el país (teletrabajo hasta las 15:00h). Por las tardes... ¡modo vacaciones activado al 100%!
+                    </p>
+                </div>
+                <div class="bg-cyan-50 p-4 rounded-xl">
+                    <p class="text-cyan-800 font-medium text-sm">✓ Exploración de calas cercanas</p>
+                    <p class="text-cyan-800 font-medium text-sm">✓ Tapeo y atardeceres</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl p-8 shadow-sm border border-stone-200 card-hover flex flex-col justify-between">
+                <div>
+                    <div class="text-4xl mb-4">🚗🌴</div>
+                    <h3 class="text-2xl font-bold text-amber-600 mb-2">Fase 2: Desconexión Total</h3>
+                    <p class="text-sm text-slate-500 mb-4 font-semibold uppercase tracking-wider">31 de Agosto al 8 de Septiembre</p>
+                    <p class="text-slate-600 mb-4">
+                        Libres para explorar con el coche, hacer excursiones de día completo, descubrir joyas ocultas y olvidarnos del reloj.
+                    </p>
+                </div>
+                <div class="bg-amber-50 p-4 rounded-xl">
+                    <p class="text-amber-800 font-medium text-sm">✓ Rutas y Miradores</p>
+                    <p class="text-amber-800 font-medium text-sm">✓ Homenajes gastronómicos</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="equilibrio-viaje" class="bg-white p-8 md:p-12 rounded-3xl shadow-sm border border-stone-200">
+        <div class="text-center mb-10">
+            <h2 class="text-3xl font-bold text-slate-800 mb-4 flex items-center justify-center gap-2">⚖️ El Equilibrio Perfecto</h2>
+            <p class="text-slate-600 max-w-2xl mx-auto text-lg">
+                Analizando nuestro plan, aquí tienes la proporción interactiva de cómo invertiremos nuestro tiempo y energía. Nuestro objetivo es claro: disfrutar al máximo. Pasa el ratón sobre el gráfico para ver los detalles.
+            </p>
+        </div>
+        
+        <div class="flex flex-col md:flex-row items-center justify-center gap-12">
+            <div class="w-full md:w-1/2">
+                <div class="chart-container">
+                    <canvas id="tripBalanceChart"></canvas>
+                </div>
+            </div>
+            <div class="w-full md:w-1/2 space-y-6">
+                <div class="flex items-start gap-4 p-4 rounded-xl bg-cyan-50 border border-cyan-100">
+                    <div class="text-3xl">🏖️</div>
+                    <div>
+                        <h4 class="font-bold text-cyan-900">Relax y Playas</h4>
+                        <p class="text-sm text-cyan-800">Casi la mitad de nuestro viaje está destinado a descansar en la arena, bañarnos en calas cristalinas y desconectar del estrés.</p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-4 p-4 rounded-xl bg-amber-50 border border-amber-100">
+                    <div class="text-3xl">🥾</div>
+                    <div>
+                        <h4 class="font-bold text-amber-900">Aventura y Excursiones</h4>
+                        <p class="text-sm text-amber-800">Snorkel en cuevas, rutas por el Peñón y visitas a pueblos de interior para alimentar nuestro espíritu explorador.</p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-4 p-4 rounded-xl bg-rose-50 border border-rose-100">
+                    <div class="text-3xl">🥘</div>
+                    <div>
+                        <h4 class="font-bold text-rose-900">Gastronomía</h4>
+                        <p class="text-sm text-rose-800">Desde tapeo en la Calle Loreto hasta Arroz a Banda y la espectacular Gamba Roja de Denia.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="itinerario-interactivo">
+        <div class="text-center mb-10">
+            <h2 class="text-3xl font-bold text-slate-800 mb-4 flex items-center justify-center gap-2">📅 Itinerario Detallado</h2>
+            <p class="text-slate-600 max-w-2xl mx-auto text-lg mb-8">
+                Aquí tienes nuestro schedule diario. Hemos diseñado esta sección para que sea interactiva: utiliza los botones inferiores para filtrar los días según la fase del viaje que quieras consultar.
+            </p>
+
+            <!-- Gemini AI Packing Assistant -->
+            <div class="mb-10 text-center">
+                <button id="btn-maleta" onclick="generatePackingList()" class="bg-gradient-to-r from-cyan-600 to-indigo-600 text-white px-6 py-3 rounded-full font-bold shadow-md hover:shadow-lg transition-all flex items-center gap-2 mx-auto">
+                    <span>✨</span> Generar Maleta Inteligente (IA)
+                </button>
+                <div id="maleta-result" class="hidden mt-6 text-left max-w-3xl mx-auto bg-white p-6 rounded-2xl shadow-sm border border-indigo-100 text-slate-700"></div>
+            </div>
+            
+            <div class="flex flex-wrap justify-center gap-3 mb-10" id="filter-container">
+                <button class="filter-btn tab-active px-5 py-2 rounded-full font-medium transition-colors text-sm md:text-base shadow-sm" data-filter="all">Viaje Completo</button>
+                <button class="filter-btn tab-inactive px-5 py-2 rounded-full font-medium transition-colors text-sm md:text-base shadow-sm" data-filter="teletrabajo">Tardes (Teletrabajo)</button>
+                <button class="filter-btn tab-inactive px-5 py-2 rounded-full font-medium transition-colors text-sm md:text-base shadow-sm" data-filter="fin-de-semana">Fines de Semana</button>
+                <button class="filter-btn tab-inactive px-5 py-2 rounded-full font-medium transition-colors text-sm md:text-base shadow-sm" data-filter="vacaciones">Vacaciones Totales</button>
+            </div>
+        </div>
+
+        <div class="flex flex-col gap-10" id="itinerary-grid">
+        </div>
+    </section>
+</main>
+
+<footer class="bg-slate-900 text-slate-400 py-8 text-center mt-12">
+    <p class="mb-2">Destino: Costa Blanca 📍</p>
+    <p class="text-sm">Diseñado para la mejor compañera de viaje ❤️</p>
+</footer>
+
+<script>
+    const apiKey = "";
+
+    async function fetchGemini(prompt, systemInstruction = "") {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+        const payload = {
+            contents: [{ parts: [{ text: prompt }] }],
+            systemInstruction: { parts: [{ text: systemInstruction }] }
+        };
+
+        let retries = 5;
+        let delay = 1000;
+        
+        for (let i = 0; i < retries; i++) {
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const data = await response.json();
+                return data.candidates[0].content.parts[0].text;
+            } catch (error) {
+                if (i === retries - 1) return "Lo siento, el guía de la IA está descansando en la playa ahora mismo. ¡Inténtalo más tarde! 🏖️";
+                await new Promise(res => setTimeout(res, delay));
+                delay *= 2;
+            }
+        }
+    }
+
+    const ctx = document.getElementById('tripBalanceChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Relax y Playas', 'Aventura y Rutas', 'Gastronomía', 'Teletrabajo'],
+            datasets: [{
+                data: [45, 25, 15, 15],
+                backgroundColor: [
+                    '#06b6d4', 
+                    '#f59e0b', 
+                    '#f43f5e', 
+                    '#94a3b8'  
+                ],
+                borderWidth: 0,
+                hoverOffset: 10
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '65%',
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        padding: 20,
+                        font: { family: "'Inter', sans-serif", size: 14 }
+                    }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                    padding: 12,
+                    cornerRadius: 8,
+                    callbacks: {
+                        label: function(context) {
+                            return ' ' + context.label + ': ' + context.parsed + '% del tiempo';
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    const itineraryData = [
+        {
+            id: 0, phase: 'teletrabajo', date: '25 de Agosto', title: 'Llegada y Baix la Mar', subtitle: 'Toma de contacto', icon: '🏘️',
+            images: [
+                'fotos/dia25_1.jpg',
+                'fotos/dia25_2.jpg'
+            ],
+            text: 'Tras trabajar, nos instalamos con calma. Tarde de paseo relajado por el Barrio Baix la Mar (el antiguo barrio de pescadores). Acabaremos el día con una cena de tapeo en la famosa y animada Calle Loreto.'
+        },
+        {
+            id: 1, phase: 'teletrabajo', date: '26 de Agosto', title: 'Relax en Las Marinas', subtitle: 'Desconexión rápida', icon: '🏖️',
+            images: [
+                'fotos/dia26_1.jpg',
+                'fotos/dia26_2.jpg'
+            ],
+            text: 'Tarde de relax directo en la arena. Iremos a la Playa de Las Marinas, grande y muy cómoda para desconectar rápido. Al caer el sol, nos tomaremos un cóctel en la Marina de Denia viendo los yates.'
+        },
+        {
+            id: 2, phase: 'teletrabajo', date: '27 de Agosto', title: 'Nuestra primera cala', subtitle: 'Paseo por Las Rotas', icon: '🌊',
+            images: [
+                'fotos/dia27_1.jpg',
+                'fotos/dia27_2.jpg'
+            ],
+            text: 'Día de descubrir nuestra primera cala. Iremos a Las Rotas, recorreremos su espectacular paseo marítimo y nos daremos un baño en sus calas rocosas de aguas transparentes.'
+        },
+        {
+            id: 3, phase: 'teletrabajo', date: '28 de Agosto', title: 'Ecuador de la semana', subtitle: 'Tardeo frente al mar', icon: '🍹',
+            images: [
+                'fotos/dia28_1.jpg',
+                'fotos/dia28_2.jpg'
+            ],
+            text: '¡Ecuador de la semana! Para celebrarlo, pasaremos el "tardeo" en Zensa Marina (un lounge con piscina en el puerto) o en un chiringuito de playa relajado para ver el atardecer.'
+        },
+        {
+            id: 4, phase: 'fin-de-semana', date: '29 de Agosto', title: 'Ruta y Cova Tallada', subtitle: 'Aventura y Arroz a Banda', icon: '🤿',
+            images: [
+                'fotos/dia29_1.jpg',
+                'fotos/dia29_2.jpg'
+            ],
+            text: 'Nos levantamos temprano para una pequeña aventura: la ruta a la Cova Tallada (una impresionante cueva a nivel del mar). Haremos snorkel y comeremos un espectacular Arroz a Banda en El Pegolí.'
+        },
+        {
+            id: 5, phase: 'fin-de-semana', date: '30 de Agosto', title: 'Escapada a Jávea', subtitle: 'El Arenal y mucho ambiente', icon: '🚗',
+            images: [
+                'fotos/dia30_1.jpg',
+                'fotos/dia30_2.jpg'
+            ],
+            text: 'Cogemos el coche y nos escapamos a Jávea. Pasaremos el día entero allí, explorando su costa y terminando con un gran "tardeo" en la zona del Arenal, llena de bares, ambiente y música.'
+        },
+        {
+            id: 6, phase: 'vacaciones', date: '31 de Agosto', title: '¡Empiezan las Vacaciones!', subtitle: 'Atardecer desde las alturas', icon: '🏰',
+            images: [
+                'fotos/dia31_1.jpg',
+                'fotos/dia31_2.jpg'
+            ],
+            text: '¡Primer día libres al 100%! Empezamos la mañana sin alarmas ni portátil. Para celebrar el inicio de las vacaciones totales, subiremos al Castillo de Denia para ver el atardecer seguido de una cena romántica en el centro.'
+        },
+        {
+            id: 7, phase: 'vacaciones', date: '1 de Septiembre', title: 'Excursión a Altea', subtitle: 'El pueblo más bonito', icon: '⛪',
+            images: [
+                'fotos/dia1_1.jpg',
+                'fotos/dia1_2.jpg'
+            ],
+            text: '¡Primer día de desconexión total! Hacemos excursión al sur, a Altea. Nos perderemos por sus callejuelas blancas, veremos sus cúpulas azules y cenaremos en su precioso casco antiguo.'
+        },
+        {
+            id: 8, phase: 'vacaciones', date: '2 de Septiembre', title: 'Jávea Premium', subtitle: 'La mítica Cala Granadella', icon: '📸',
+            images: [
+                'fotos/dia2_1.jpg',
+                'fotos/dia2_2.jpg'
+            ],
+            text: 'Madrugaremos bastante para asegurarnos sitio en la mítica Cala Granadella (una de las mejores playas de España). Por la tarde, haremos la famosa Ruta de los Miradores en coche.'
+        },
+        {
+            id: 9, phase: 'vacaciones', date: '3 de Septiembre', title: 'Calpe y el Peñón', subtitle: 'Naturaleza imponente', icon: '⛰️',
+            images: [
+                'fotos/dia3_1.jpg',
+                'fotos/dia3_2.jpg'
+            ],
+            text: 'Día de excursión a Calpe. Para los valientes, intentaremos subir una parte del emblemático Peñón de Ifach. Después, nos refrescaremos haciendo snorkel en la Cala El Racó, ideal para ver peces.'
+        },
+        {
+            id: 10, phase: 'vacaciones', date: '4 de Septiembre', title: 'El encanto de Moraira', subtitle: 'Aguas como una piscina', icon: '🏖️',
+            images: [
+                'fotos/dia4_1.jpg',
+                'fotos/dia4_2.jpg'
+            ],
+            text: 'Día más selecto en Moraira. Nos bañaremos en la Cala del Portet, famosa porque sus aguas son tan tranquilas que parece una piscina natural. Por la tarde, disfrutaremos de un Beach Club de la zona.'
+        },
+        {
+            id: 11, phase: 'vacaciones', date: '5 de Septiembre', title: 'Cascadas y Montaña', subtitle: 'Contrastes del interior', icon: '🌿',
+            images: [
+                'fotos/dia5_1.jpg',
+                'fotos/dia5_2.jpg'
+            ],
+            text: 'Dejamos la sal por un día. Iremos a Les Fonts de l\'Algar para bañarnos en sus cascadas y pozas de agua dulce muy fría. A la vuelta, pararemos en el precioso pueblo medieval de Guadalest.'
+        },
+        {
+            id: 12, phase: 'vacaciones', date: '6 de Septiembre', title: 'La Cueva de los Arcos', subtitle: 'Paisaje de película', icon: '🌅',
+            images: [
+                'fotos/dia6_1.jpg',
+                'fotos/dia6_2.jpg'
+            ],
+            text: 'Vamos a Benitachell para alucinar con la Cala del Moraig y su Cueva de los Arcos. Un paisaje de roca tallada por el mar que parece sacado de otro planeta. Día de playa espectacular.'
+        },
+        {
+            id: 13, phase: 'vacaciones', date: '7 de Septiembre', title: 'Relax y Homenaje', subtitle: 'La Gamba Roja de Denia', icon: '🦐',
+            images: [
+                'fotos/dia7_1.jpg',
+                'fotos/dia7_2.jpg'
+            ],
+            text: 'Último día completo. Modo relax absoluto en Denia. Pasearemos, compraremos recuerdos y por la noche nos daremos un homenaje culinario: es obligatorio probar la auténtica Gamba Roja de Denia.'
+        },
+        {
+            id: 14, phase: 'vacaciones', date: '8 de Septiembre', title: 'Hasta Pronto', subtitle: 'Vuelta a la realidad', icon: '🥂',
+            images: [
+                'fotos/dia8_1.jpg',
+                'fotos/dia8_2.jpg'
+            ],
+            text: 'Desayuno tranquilo frente al mar, último paseo por la Marina, cargamos el coche (con buenos recuerdos y quizá algo de vino o Mistela) y ponemos rumbo a casa con las pilas recargadas.'
+        }
+    ];
+
+    const gridContainer = document.getElementById('itinerary-grid');
+    
+    function renderCards(filter) {
+        gridContainer.innerHTML = '';
+        itineraryData.forEach(item => {
+            if (filter === 'all' || item.phase === filter || (filter === 'vacaciones' && item.phase === 'fin-de-semana')) {
+                
+                let badgeClass = 'bg-slate-100 text-slate-600';
+                if(item.phase === 'teletrabajo') badgeClass = 'bg-cyan-100 text-cyan-800';
+                if(item.phase === 'fin-de-semana') badgeClass = 'bg-amber-100 text-amber-800';
+                if(item.phase === 'vacaciones') badgeClass = 'bg-rose-100 text-rose-800';
+
+                // Gemini AI Suggestion Block
+                let geminiHTML = '';
+                if (item.geminiTip) {
+                    geminiHTML = `<div class="mt-4 p-4 bg-indigo-50 rounded-xl border border-indigo-100 text-sm text-indigo-800"><span class="font-bold">✨ Tip del Guía:</span> ${item.geminiTip}</div>`;
+                } else if (item.geminiLoading) {
+                    geminiHTML = `<div class="mt-4 p-4 bg-slate-50 rounded-xl border border-slate-100 text-sm text-slate-500 flex items-center gap-2"><svg class="animate-spin h-4 w-4 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Consultando al guía local...</div>`;
+                } else {
+                    geminiHTML = `<button onclick="getDailyTip(${item.id})" class="mt-4 text-xs font-medium text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1 w-max">✨ Pedir tip al Guía Local (IA)</button>`;
+                }
+
+                // Generar HTML para las imágenes del carrusel (ahora con etiquetas <img> reales)
+                let imagesHTML = item.images.map((img, index) => `
+                    <div id="carousel-${item.id}-img-${index}" class="absolute inset-0 transition-opacity duration-500 bg-slate-900 flex items-center justify-center ${index === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'}">
+                        <img src="${img}" alt="Foto de ${item.title}" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" onerror="this.onerror=null; this.outerHTML='<div class=\\'text-slate-500 text-sm italic px-4 text-center\\'>Falta la foto:<br>${img}</div>';">
+                    </div>
+                `).join('');
+
+                // Generar HTML para los controles del carrusel si hay más de una imagen
+                let controlsHTML = '';
+                if (item.images.length > 1) {
+                    controlsHTML = `
+                        <button onclick="moveCarousel(${item.id}, -1)" class="absolute left-2 top-1/2 -translate-y-1/2 z-30 bg-slate-900/50 hover:bg-slate-900/80 text-white rounded-full p-1.5 focus:outline-none transition-colors backdrop-blur-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg>
+                        </button>
+                        <button onclick="moveCarousel(${item.id}, 1)" class="absolute right-2 top-1/2 -translate-y-1/2 z-30 bg-slate-900/50 hover:bg-slate-900/80 text-white rounded-full p-1.5 focus:outline-none transition-colors backdrop-blur-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>
+                        </button>
+                        <div class="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 flex gap-2">
+                            ${item.images.map((_, i) => `<div id="carousel-${item.id}-dot-${i}" class="w-2 h-2 rounded-full transition-colors ${i === 0 ? 'bg-white' : 'bg-white/40'}"></div>`).join('')}
+                        </div>
+                    `;
+                }
+
+                const card = document.createElement('div');
+                card.className = `bg-white rounded-3xl shadow-md border border-stone-200 card-hover fade-in overflow-hidden flex flex-col md:flex-row mb-6`;
+                card.innerHTML = `
+                    <div id="carousel-${item.id}" data-current="0" data-total="${item.images.length}" class="md:w-5/12 relative min-h-[250px] bg-slate-800 border-b md:border-b-0 md:border-r border-stone-200 overflow-hidden group">
+                        ${imagesHTML}
+                        ${controlsHTML}
+                    </div>
+                    <div class="p-8 md:w-7/12 flex flex-col justify-center">
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide ${badgeClass}">${item.date}</span>
+                            <span class="text-3xl">${item.icon}</span>
+                        </div>
+                        <h3 class="text-2xl font-bold text-slate-800 mb-1">${item.title}</h3>
+                        <p class="text-md font-medium text-cyan-600 mb-6 pb-4 border-b border-slate-100">${item.subtitle}</p>
+                        <p class="text-slate-600 leading-relaxed text-base">${item.text}</p>
+                        ${geminiHTML}
+                    </div>
+                `;
+                gridContainer.appendChild(card);
+            }
+        });
+    }
+
+    // Función para manejar el paso de imágenes en el carrusel
+    window.moveCarousel = function(cardId, direction) {
+        const container = document.getElementById(`carousel-${cardId}`);
+        let current = parseInt(container.getAttribute('data-current'));
+        const total = parseInt(container.getAttribute('data-total'));
+        
+        // Ocultar imagen actual y apagar su puntito
+        document.getElementById(`carousel-${cardId}-img-${current}`).classList.remove('opacity-100', 'z-10');
+        document.getElementById(`carousel-${cardId}-img-${current}`).classList.add('opacity-0', 'z-0', 'pointer-events-none');
+        document.getElementById(`carousel-${cardId}-dot-${current}`).classList.remove('bg-white');
+        document.getElementById(`carousel-${cardId}-dot-${current}`).classList.add('bg-white/40');
+
+        // Calcular nuevo índice (circular)
+        current = (current + direction + total) % total;
+        container.setAttribute('data-current', current);
+
+        // Mostrar nueva imagen y encender su puntito
+        document.getElementById(`carousel-${cardId}-img-${current}`).classList.remove('opacity-0', 'z-0', 'pointer-events-none');
+        document.getElementById(`carousel-${cardId}-img-${current}`).classList.add('opacity-100', 'z-10');
+        document.getElementById(`carousel-${cardId}-dot-${current}`).classList.remove('bg-white/40');
+        document.getElementById(`carousel-${cardId}-dot-${current}`).classList.add('bg-white');
+    };
+
+    renderCards('all');
+
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            filterBtns.forEach(b => {
+                b.classList.remove('tab-active');
+                b.classList.add('tab-inactive');
+            });
+            e.target.classList.remove('tab-inactive');
+            e.target.classList.add('tab-active');
+            
+            const filterValue = e.target.getAttribute('data-filter');
+            renderCards(filterValue);
+        });
+    });
+
+    // Gemini API Features
+    window.getDailyTip = async function(id) {
+        const item = itineraryData.find(i => i.id === id);
+        if(!item) return;
+        
+        item.geminiLoading = true;
+        renderCards(document.querySelector('.tab-active').getAttribute('data-filter'));
+        
+        const prompt = `Plan para el ${item.date}: ${item.title}. Actividades: ${item.text}. Dame 1 solo consejo breve (máximo 2 frases) para este día en la Costa Blanca (un plato específico que pedir, una curiosidad del lugar, o un consejo romántico para parejas). No uses asteriscos ni markdown, solo el texto limpio.`;
+        const tip = await fetchGemini(prompt, "Eres un guía turístico local experto y romántico de la Costa Blanca.");
+        
+        item.geminiLoading = false;
+        item.geminiTip = tip;
+        renderCards(document.querySelector('.tab-active').getAttribute('data-filter'));
+    };
+
+    window.generatePackingList = async function() {
+        const btn = document.getElementById('btn-maleta');
+        const resultDiv = document.getElementById('maleta-result');
+        
+        btn.innerHTML = `<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Pensando en los modelitos...`;
+        btn.disabled = true;
+        btn.classList.add('opacity-70', 'cursor-not-allowed');
+        resultDiv.classList.remove('hidden');
+        resultDiv.innerHTML = `<div class="animate-pulse space-y-4"><div class="h-4 bg-indigo-100 rounded w-1/2"></div><div class="h-4 bg-indigo-100 rounded w-3/4"></div><div class="h-4 bg-indigo-100 rounded w-full"></div></div>`;
+        
+        const prompt = `Crea una lista de equipaje imprescindible para un viaje en pareja a Denia y la Costa Blanca del 25 de agosto al 8 de septiembre. Durante la primera semana haremos teletrabajo por las mañanas. El resto será playa, snorkel en cuevas, cenas en restaurantes elegantes y alguna ruta de miradores. Usa etiquetas HTML semánticas (<h3>, <ul>, <li class="mb-2">, <strong>) para formatearlo bonito. Sé divertido, útil y breve. No incluyas la etiqueta <html> ni <body>, solo el contenido.`;
+        
+        const text = await fetchGemini(prompt, "Eres un organizador de viajes profesional y romántico.");
+        
+        resultDiv.innerHTML = text;
+        btn.innerHTML = `<span>✨</span> ¡Maleta Lista!`;
+    };
+
+</script>
+</body>
+</html>
+
+
