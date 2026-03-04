@@ -68,10 +68,7 @@
 
     <section id="el-plan-maestro">
         <div class="text-center mb-10">
-            <h2 class="text-3xl font-bold text-slate-800 mb-4 flex items-center justify-center gap-2">🗺️ El Plan Maestro</h2>
-            <p class="text-slate-600 max-w-2xl mx-auto text-lg">
-                Esta sección te ofrece una visión general de cómo estructuraremos nuestros días. Hemos dividido el viaje en dos fases perfectas para equilibrar responsabilidades y puro disfrute.
-            </p>
+            <h2 class="text-3xl font-bold text-slate-800 flex items-center justify-center gap-2">🗺️ El Plan Maestro</h2>
         </div>
 
         <div class="grid md:grid-cols-2 gap-8">
@@ -85,6 +82,7 @@
                     </p>
                 </div>
                 <div class="bg-cyan-50 p-4 rounded-xl">
+                    <p class="text-cyan-800 font-medium text-sm">✓ Chapuzones rápidos en nuestra piscina</p>
                     <p class="text-cyan-800 font-medium text-sm">✓ Exploración de calas cercanas</p>
                     <p class="text-cyan-800 font-medium text-sm">✓ Tapeo y atardeceres</p>
                 </div>
@@ -109,10 +107,7 @@
 
     <section id="equilibrio-viaje" class="bg-white p-8 md:p-12 rounded-3xl shadow-sm border border-stone-200">
         <div class="text-center mb-10">
-            <h2 class="text-3xl font-bold text-slate-800 mb-4 flex items-center justify-center gap-2">⚖️ El Equilibrio Perfecto</h2>
-            <p class="text-slate-600 max-w-2xl mx-auto text-lg">
-                Analizando nuestro plan, aquí tienes la proporción interactiva de cómo invertiremos nuestro tiempo y energía. Nuestro objetivo es claro: disfrutar al máximo. Pasa el ratón sobre el gráfico para ver los detalles.
-            </p>
+            <h2 class="text-3xl font-bold text-slate-800 flex items-center justify-center gap-2">⚖️ El Equilibrio Perfecto</h2>
         </div>
         
         <div class="flex flex-col md:flex-row items-center justify-center gap-12">
@@ -149,18 +144,7 @@
 
     <section id="itinerario-interactivo">
         <div class="text-center mb-10">
-            <h2 class="text-3xl font-bold text-slate-800 mb-4 flex items-center justify-center gap-2">📅 Itinerario Detallado</h2>
-            <p class="text-slate-600 max-w-2xl mx-auto text-lg mb-8">
-                Aquí tienes nuestro schedule diario. Hemos diseñado esta sección para que sea interactiva: utiliza los botones inferiores para filtrar los días según la fase del viaje que quieras consultar.
-            </p>
-
-            <!-- Gemini AI Packing Assistant -->
-            <div class="mb-10 text-center">
-                <button id="btn-maleta" onclick="generatePackingList()" class="bg-gradient-to-r from-cyan-600 to-indigo-600 text-white px-6 py-3 rounded-full font-bold shadow-md hover:shadow-lg transition-all flex items-center gap-2 mx-auto">
-                    <span>✨</span> Generar Maleta Inteligente (IA)
-                </button>
-                <div id="maleta-result" class="hidden mt-6 text-left max-w-3xl mx-auto bg-white p-6 rounded-2xl shadow-sm border border-indigo-100 text-slate-700"></div>
-            </div>
+            <h2 class="text-3xl font-bold text-slate-800 mb-8 flex items-center justify-center gap-2">📅 Itinerario Detallado</h2>
             
             <div class="flex flex-wrap justify-center gap-3 mb-10" id="filter-container">
                 <button class="filter-btn tab-active px-5 py-2 rounded-full font-medium transition-colors text-sm md:text-base shadow-sm" data-filter="all">Viaje Completo</button>
@@ -181,37 +165,6 @@
 </footer>
 
 <script>
-    const apiKey = "";
-
-    async function fetchGemini(prompt, systemInstruction = "") {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-        const payload = {
-            contents: [{ parts: [{ text: prompt }] }],
-            systemInstruction: { parts: [{ text: systemInstruction }] }
-        };
-
-        let retries = 5;
-        let delay = 1000;
-        
-        for (let i = 0; i < retries; i++) {
-            try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                const data = await response.json();
-                return data.candidates[0].content.parts[0].text;
-            } catch (error) {
-                if (i === retries - 1) return "Lo siento, el guía de la IA está descansando en la playa ahora mismo. ¡Inténtalo más tarde! 🏖️";
-                await new Promise(res => setTimeout(res, delay));
-                delay *= 2;
-            }
-        }
-    }
-
     const ctx = document.getElementById('tripBalanceChart').getContext('2d');
     new Chart(ctx, {
         type: 'doughnut',
@@ -262,7 +215,7 @@
                 'fotos/dia25_1.jpg',
                 'fotos/dia25_2.jpg'
             ],
-            text: 'Tras trabajar, nos instalamos con calma. Tarde de paseo relajado por el Barrio Baix la Mar (el antiguo barrio de pescadores). Acabaremos el día con una cena de tapeo en la famosa y animada Calle Loreto.'
+            text: 'Tras trabajar, nos instalamos con calma ¡y estrenamos la piscina del apartamento! Después, daremos un paseo relajado por el Barrio Baix la Mar. Acabaremos el día con una cena de tapeo en la famosa Calle Loreto.'
         },
         {
             id: 1, phase: 'teletrabajo', date: '26 de Agosto', title: 'Relax en Las Marinas', subtitle: 'Desconexión rápida', icon: '🏖️',
@@ -270,7 +223,7 @@
                 'fotos/dia26_1.jpg',
                 'fotos/dia26_2.jpg'
             ],
-            text: 'Tarde de relax directo en la arena. Iremos a la Playa de Las Marinas, grande y muy cómoda para desconectar rápido. Al caer el sol, nos tomaremos un cóctel en la Marina de Denia viendo los yates.'
+            text: 'Tarde de relax. Primero un baño en nuestra piscina al cerrar el portátil y directos a la arena de la Playa de Las Marinas para desconectar. Al caer el sol, nos tomaremos un cóctel en la Marina de Denia viendo los yates.'
         },
         {
             id: 2, phase: 'teletrabajo', date: '27 de Agosto', title: 'Nuestra primera cala', subtitle: 'Paseo por Las Rotas', icon: '🌊',
@@ -390,16 +343,6 @@
                 if(item.phase === 'fin-de-semana') badgeClass = 'bg-amber-100 text-amber-800';
                 if(item.phase === 'vacaciones') badgeClass = 'bg-rose-100 text-rose-800';
 
-                // Gemini AI Suggestion Block
-                let geminiHTML = '';
-                if (item.geminiTip) {
-                    geminiHTML = `<div class="mt-4 p-4 bg-indigo-50 rounded-xl border border-indigo-100 text-sm text-indigo-800"><span class="font-bold">✨ Tip del Guía:</span> ${item.geminiTip}</div>`;
-                } else if (item.geminiLoading) {
-                    geminiHTML = `<div class="mt-4 p-4 bg-slate-50 rounded-xl border border-slate-100 text-sm text-slate-500 flex items-center gap-2"><svg class="animate-spin h-4 w-4 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Consultando al guía local...</div>`;
-                } else {
-                    geminiHTML = `<button onclick="getDailyTip(${item.id})" class="mt-4 text-xs font-medium text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1 w-max">✨ Pedir tip al Guía Local (IA)</button>`;
-                }
-
                 // Generar HTML para las imágenes del carrusel (ahora con etiquetas <img> reales)
                 let imagesHTML = item.images.map((img, index) => `
                     <div id="carousel-${item.id}-img-${index}" class="absolute inset-0 transition-opacity duration-500 bg-slate-900 flex items-center justify-center ${index === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'}">
@@ -438,7 +381,6 @@
                         <h3 class="text-2xl font-bold text-slate-800 mb-1">${item.title}</h3>
                         <p class="text-md font-medium text-cyan-600 mb-6 pb-4 border-b border-slate-100">${item.subtitle}</p>
                         <p class="text-slate-600 leading-relaxed text-base">${item.text}</p>
-                        ${geminiHTML}
                     </div>
                 `;
                 gridContainer.appendChild(card);
@@ -486,42 +428,6 @@
         });
     });
 
-    // Gemini API Features
-    window.getDailyTip = async function(id) {
-        const item = itineraryData.find(i => i.id === id);
-        if(!item) return;
-        
-        item.geminiLoading = true;
-        renderCards(document.querySelector('.tab-active').getAttribute('data-filter'));
-        
-        const prompt = `Plan para el ${item.date}: ${item.title}. Actividades: ${item.text}. Dame 1 solo consejo breve (máximo 2 frases) para este día en la Costa Blanca (un plato específico que pedir, una curiosidad del lugar, o un consejo romántico para parejas). No uses asteriscos ni markdown, solo el texto limpio.`;
-        const tip = await fetchGemini(prompt, "Eres un guía turístico local experto y romántico de la Costa Blanca.");
-        
-        item.geminiLoading = false;
-        item.geminiTip = tip;
-        renderCards(document.querySelector('.tab-active').getAttribute('data-filter'));
-    };
-
-    window.generatePackingList = async function() {
-        const btn = document.getElementById('btn-maleta');
-        const resultDiv = document.getElementById('maleta-result');
-        
-        btn.innerHTML = `<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Pensando en los modelitos...`;
-        btn.disabled = true;
-        btn.classList.add('opacity-70', 'cursor-not-allowed');
-        resultDiv.classList.remove('hidden');
-        resultDiv.innerHTML = `<div class="animate-pulse space-y-4"><div class="h-4 bg-indigo-100 rounded w-1/2"></div><div class="h-4 bg-indigo-100 rounded w-3/4"></div><div class="h-4 bg-indigo-100 rounded w-full"></div></div>`;
-        
-        const prompt = `Crea una lista de equipaje imprescindible para un viaje en pareja a Denia y la Costa Blanca del 25 de agosto al 8 de septiembre. Durante la primera semana haremos teletrabajo por las mañanas. El resto será playa, snorkel en cuevas, cenas en restaurantes elegantes y alguna ruta de miradores. Usa etiquetas HTML semánticas (<h3>, <ul>, <li class="mb-2">, <strong>) para formatearlo bonito. Sé divertido, útil y breve. No incluyas la etiqueta <html> ni <body>, solo el contenido.`;
-        
-        const text = await fetchGemini(prompt, "Eres un organizador de viajes profesional y romántico.");
-        
-        resultDiv.innerHTML = text;
-        btn.innerHTML = `<span>✨</span> ¡Maleta Lista!`;
-    };
-
 </script>
 </body>
 </html>
-
-
